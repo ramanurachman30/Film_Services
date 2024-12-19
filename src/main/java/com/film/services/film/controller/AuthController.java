@@ -13,6 +13,13 @@ import com.film.services.film.model.User;
 import com.film.services.film.service.AuthService;
 import com.film.services.film.service.JwtService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
+
+@Tag(name = "Auth", description = "Auth")
 @RequestMapping("/auth")
 @RestController
 public class AuthController {
@@ -25,6 +32,17 @@ public class AuthController {
         this.jwtService = jwtService;
     }
 
+    @Operation(
+        summary = "Registrasi User",
+        description = "Registrasi User",
+        tags = { "Auth"},
+        responses = {
+				@ApiResponse( description = "Success", responseCode = "200"),
+				@ApiResponse(description = "BadCredential", responseCode = "401", content = @Content),
+				@ApiResponse(description = "Error", responseCode = "400", content = @Content),
+				@ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
+			}
+    )
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterUserDto rud){
         User u = authService.signup(rud);
@@ -32,6 +50,17 @@ public class AuthController {
         return ResponseEntity.ok().body(u);
     }
 
+    @Operation(
+        summary = "Login User",
+        description = "Login User",
+        tags = { "Auth"},
+        responses = {
+            @ApiResponse( description = "Success", responseCode = "200"),
+            @ApiResponse(description = "BadCredential", responseCode = "401", content = @Content),
+            @ApiResponse(description = "Error", responseCode = "400", content = @Content),
+            @ApiResponse(description = "Not Found", responseCode = "404", content = @Content)
+        }
+    )
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginUserDto lud){
         User u  = authService.authenticate(lud);
